@@ -44,7 +44,7 @@ https://rsshub.example.com/zhihu/xxx        ← 超时（知乎抓取慢）
 
 ```bash
 cd /path/to/FreshRSS/extensions
-git clone https://github.com/unliar/freshrss-noRetry-extention.git xExtension-NoRetry
+git clone https://github.com/unliar/freshrss-noRetry-extension.git xExtension-NoRetry
 ```
 
 > 注意末尾的 `xExtension-NoRetry` 是目标目录名。

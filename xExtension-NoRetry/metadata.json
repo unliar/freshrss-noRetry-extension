@@ -1,0 +1,8 @@
+{
+  "name": "No Retry-After",
+  "author": "alma",
+  "description": "白名单域名不做退避：每次请求前清理指定域名的 Retry-After 记录，避免单个订阅失败导致同域名所有订阅被冻结。",
+  "version": "1.0.0",
+  "entrypoint": "NoRetry",
+  "type": "user"
+}

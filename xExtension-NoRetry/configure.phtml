@@ -1,0 +1,55 @@
+<?php
+/**
+ * NoRetry 扩展配置界面
+ *
+ * 两个关键约束（都踩过坑）：
+ *
+ * 1. 这里不能写 $this->extension —— getConfigureView() 只是 include 本文件，
+ *    不会把 $this 设成 FreshRSS_View，$this->extension 是 null，
+ *    调用 getName() 会直接 Fatal，导致配置页整片空白。
+ *
+ * 2. 必须自己包 <form>。FreshRSS 的 helpers/extension/configure.phtml
+ *    把本文件渲染在框架自己的 <form> 之外（那个 form 只有「删除」按钮），
+ *    所以不包 form 就没有保存按钮、数据也提交不了。
+ *
+ * 3. URL 里的扩展标识符必须用 metadata.json 的 name 字段（"No Retry-After"），
+ *    不是 entrypoint（"NoRetry"）。
+ *
+ * 这里只依赖：
+ *   - FreshRSS_Context（读用户配置）
+ *   - FreshRSS_Auth（CSRF token）
+ *   - _url() / _t()（框架全局函数）
+ *   - NoRetryExtension（本扩展静态方法）
+ */
+declare(strict_types=1);
+
+$raw = FreshRSS_Context::userConf()->attributeString(NoRetryExtension::CONF_KEY);
+if ($raw === null || trim($raw) === '') {
+	$raw = 'rsshub.flyneko.com';
+}
+$effective = NoRetryExtension::getWhitelist();
+$t = static fn(string $k): string => _t(NoRetryExtension::I18N_PREFIX . $k);
+?>
+<form method="post" action="<?= _url('extension', 'configure', 'e', urlencode('No Retry-After')) ?>">
+	<input type="hidden" name="_csrf" value="<?= FreshRSS_Auth::csrfToken() ?>" />
+
+	<div class="form-group">
+		<label class="group-name" for="noretry_whitelist"><?= $t('whitelist') ?></label>
+		<div class="group-controls">
+			<textarea id="noretry_whitelist" name="noretry_whitelist" rows="8"
+				style="width:100%;max-width:640px;font-family:monospace;"
+				placeholder="rsshub.flyneko.com"><?= htmlspecialchars($raw, ENT_QUOTES, 'UTF-8') ?></textarea>
+			<p class="help">
+				<?= $t('whitelist_help') ?><br>
+				<?= $t('effective') ?>：<strong><?= htmlspecialchars($effective === [] ? $t('empty') : implode('、', $effective), ENT_QUOTES, 'UTF-8') ?></strong>
+			</p>
+		</div>
+	</div>
+
+	<div class="form-group form-actions">
+		<div class="group-controls">
+			<button type="submit" class="btn btn-important"><?= _t('gen.action.submit') ?></button>
+			<button type="reset" class="btn"><?= _t('gen.action.cancel') ?></button>
+		</div>
+	</div>
+</form>

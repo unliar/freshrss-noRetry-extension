@@ -40,15 +40,20 @@ https://rsshub.example.com/zhihu/xxx        ← 超时（知乎抓取慢）
 
 ### 方式一：Git clone（推荐）
 
+仓库根目录就是插件本体，直接 clone 到 extensions 下即可：
+
 ```bash
 cd /path/to/FreshRSS/extensions
-git clone https://github.com/<你的用户名>/xExtension-NoRetry.git
+git clone https://github.com/unliar/freshrss-noRetry-extention.git xExtension-NoRetry
 ```
+
+> 注意末尾的 `xExtension-NoRetry` 是目标目录名。
+> FreshRSS 只扫描 `extensions/` 的**下一级目录**，目录名建议保持 `xExtension-` 前缀，便于识别。
 
 ### 方式二：手动下载
 
-1. 下载并解压到 `FreshRSS/extensions/xExtension-NoRetry/`
-2. 确保目录里有 `metadata.json`、`extension.php`、`configure.phtml` 三个文件
+1. 下载本仓库 zip，解压后把内容放到 `FreshRSS/extensions/xExtension-NoRetry/`
+2. 该目录下应该直接看到 `metadata.json`、`extension.php`、`configure.phtml` 三个文件（不要再套一层）
 
 ### 启用
 
